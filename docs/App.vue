@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
-    <lui-header />
+    <!-- <lui-header /> -->
     <router-view/>
   </div>
 </template>
