@@ -2,10 +2,13 @@ import LoadingBar from './src/loading-bar'
 
 let loadingBarInstance
 let timer
+let speed = 10
 
 function update (options) {
-  loadingBarInstance = LoadingBar.getInstance()
-  loadingBarInstance && loadingBarInstance.update(options)
+  if (!loadingBarInstance) {
+    loadingBarInstance = LoadingBar.getInstance()
+  }
+  loadingBarInstance.update(options)
 }
 
 function hide () {
@@ -48,7 +51,7 @@ export default {
         status: 'success',
         show: true
       })
-    }, 200)
+    }, 1000 / speed)
   },
   finish () {
     clearTimer()
@@ -67,6 +70,12 @@ export default {
       show: true
     })
     hide()
+  },
+  config (options) {
+    if ('speed' in options) {
+      speed = options.speed
+    }
+    update(options)
   },
   destroy () {
     clearTimer()

@@ -4,7 +4,7 @@
       :class="[
         status ? 'lui-loading-bar--' + status : ''
       ]"
-      :style="{ height: width + 'px' }"
+      :style="{ height: height + 'px' }"
       v-show="show"
     >
       <div class="lui-loading-bar__inner"
@@ -16,12 +16,22 @@
 <script>
 export default {
   name: 'LuiLoadingBar',
-  data () {
-    return {
-      show: false,
-      percent: 0,
-      width: 2,
-      status: 'success'
+  props: {
+    status: {
+      type: String,
+      default: 'success'
+    },
+    percent: {
+      type: Number,
+      default: 0
+    },
+    height: {
+      type: Number,
+      default: 2
+    },
+    show: {
+      type: Boolean,
+      default: false
     }
   }
 }

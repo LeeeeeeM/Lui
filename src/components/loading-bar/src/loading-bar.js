@@ -1,39 +1,53 @@
 import Vue from 'vue'
 import LoadingBar from './loading-bar.vue'
 
-let loadingBar
+let wrapComponent
 let div
 
-LoadingBar.getInstance = () => {
-  if (loadingBar && div) {
-    // singleton
-  } else {
+LoadingBar.getInstance = function (options = {}) {
+  options = Object.assign({}, {
+    status: 'success',
+    percent: 0,
+    height: 2,
+    show: false
+  }, options)
+
+  if (!wrapComponent || !div) {
     div = document.createElement('div')
     document.body.appendChild(div)
 
-    loadingBar = new Vue({
+    // 通过一个wrap包裹进行通信,不要直接修改props
+    wrapComponent = new Vue({
       render (h) {
-        return h(LoadingBar)
+        return h(LoadingBar, {
+          props: this.$data
+        })
+      },
+      data () {
+        return options
       }
-    }).$mount(div).$children[0]
+    }).$mount(div)
   }
 
   return {
-    component: loadingBar,
+    component: wrapComponent,
     update (options) {
       if ('percent' in options) {
-        loadingBar.percent = options.percent
+        wrapComponent.percent = options.percent
       }
       if ('status' in options) {
-        loadingBar.status = options.status
+        wrapComponent.status = options.status
       }
       if ('show' in options) {
-        loadingBar.show = options.show
+        wrapComponent.show = options.show
+      }
+      if ('height' in options) {
+        wrapComponent.height = options.height
       }
     },
     destroy () {
-      loadingBar.$destroy()
-      loadingBar = null
+      wrapComponent && wrapComponent.$destroy()
+      wrapComponent = null
       document.body.removeChild(div)
     }
   }
